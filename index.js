@@ -37,5 +37,6 @@ module.exports.setAppName = (app_name) => {
       timestamp(),
       json(),
     ),
+    transports: [new transports.Console()]
   })
 }
