@@ -24,14 +24,18 @@ module.exports.setLevel = (level) => {
   logger.configure({ level })
 }
 
-module.exports.setAppName = (level) => {
+module.exports.setAppName = (app_name) => {
   logger.configure({
-    format: format((info, opts) => {
-      Object.assign(info, {
-        app_name: 'monitoring',
-        commit: process.env.COMMIT
-      })
-      return info
-    })(),
+    format: combine(
+      format((info, opts) => {
+        Object.assign(info, {
+          app_name,
+          commit: process.env.COMMIT
+        })
+        return info
+      })(),
+      timestamp(),
+      json(),
+    ),
   })
 }
