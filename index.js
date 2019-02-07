@@ -1,42 +1,37 @@
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, json } = format;
 
-const logger = createLogger({
-  level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
-  format: combine(
+
+function generateFormat(app_name) {
+  return combine(
     format((info, opts) => {
       Object.assign(info, {
-        app_name: 'monitoring',
+        app_name,
         commit: process.env.COMMIT
       })
       return info
     })(),
     timestamp(),
     json(),
-  ),
+  )
+}
+
+var config = {
+  level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
+  format: generateFormat()
   transports: [new transports.Console()]
-});
+}
+
+const logger = createLogger(config);
 
 module.exports = logger
 
-
 module.exports.setLevel = (level) => {
-  logger.configure({ level })
+  config.level = level
+  logger.configure(config)
 }
 
 module.exports.setAppName = (app_name) => {
-  logger.configure({
-    format: combine(
-      format((info, opts) => {
-        Object.assign(info, {
-          app_name,
-          commit: process.env.COMMIT
-        })
-        return info
-      })(),
-      timestamp(),
-      json(),
-    ),
-    transports: [new transports.Console()]
-  })
+  config.format = generateFormat(app_name)
+  logger.configure(config)
 }
