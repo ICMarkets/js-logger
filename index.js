@@ -18,7 +18,7 @@ function generateFormat(app_name) {
 
 var config = {
   level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
-  format: generateFormat()
+  format: generateFormat(),
   transports: [new transports.Console()]
 }
 
