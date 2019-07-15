@@ -65,3 +65,5 @@ typings/
 
 # PHP Storm
 .idea
+
+package-lock.json
